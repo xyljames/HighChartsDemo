@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+  <script src="https://code.highcharts.com/highcharts.js"></script>
+  <script src="https://code.highcharts.com/modules/data.js"></script>
+  <script src="https://code.highcharts.com/modules/series-label.js"></script>
+  <script src="https://code.highcharts.com/modules/exporting.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    #graph1 {
+      margin: 0 5% 0 5%;
+    }
+    .row {
+      position: relative;
+      display: -webkit-flex; Safari
+      display: flex;
+      left: 15%;
+    }
+    h2 {
+      text-align: center;
+    }
+  </style>
+
+  <script>
+    $(function(){
+      $("#includedContent").load("testModal.html");
+    });
+  </script>
+
+</head>
+<body>
+
+  <h2>NRB Tickets Trending View</h2>
+  <div id="includedContent"></div>
+  <div id="graph1" ></div>
+  <div>
+    <h2>Sort By Problem Type</h2>
+    <div class="row ">
+      <div id="graph2L" ></div>
+      <div id="graph2R" class="right" "></div>
+    </div>
+    <br>
+    <p style="clear: both;"></p>
+    <h2>Sort By Device Model</h2>
+    <div class="row ">
+      <div id="graph3L" ></div>
+      <div id="graph3R" class="right" ></div>
+    </div>
+  </div>
+
+
+  <!-- Additional files for the Highslide popup effect -->
+  <script src="https://www.highcharts.com/media/com_demo/js/highslide-full.min.js"></script>
+  <script src="https://www.highcharts.com/media/com_demo/js/highslide.config.js" charset="utf-8"></script>
+  <link rel="stylesheet" type="text/css" href="https://www.highcharts.com/media/com_demo/css/highslide.css" />
+
+  <script>
+    function getTopN(obj, n) {
+      let props = Object.keys(obj).map(function(key) {
+        return { key: key, value: this[key] };
+      }, obj);
+      props.sort(function(p1, p2) { return p2.value - p1.value; });
+      return props.slice(0, n);
+    }
+
+    $.get('testdata.csv', function (csv) {
+      let tmpData = csv.split('\n').map(e => e.split(','))
+      let graph1Obj = {}
+
+      for (let i = 1, len = tmpData.length; i < len ; i++) {
+        graph1Obj[tmpData[i][2]] != null ? graph1Obj[tmpData[i][2]]++ : graph1Obj[tmpData[i][2]] = 1
+      }
+      let graphArr = []
+      Object.keys(graph1Obj).map(e => {
+        graphArr.push([e, graph1Obj[e]]);
+      })
+
+      Highcharts.chart('graph1', {
+        title: {
+            // text: 'NRB Tickets Trending View'
+          },
+          xAxis: {
+            tickInterval: 7 * 24 * 3600 * 1000, // one week
+            tickWidth: 0,
+            gridLineWidth: 1,
+            labels: {
+              align: 'left',
+              x: 3,
+              y: 22
+            }
+          },
+
+        yAxis: [{ // left y axis
+          title: {
+            text: null
+          },
+          labels: {
+            align: 'left',
+            x: 3,
+            y: 16,
+            format: '{value:.,0f}'
+          },
+          showFirstLabel: false
+        }, { // right y axis
+          linkedTo: 0,
+          gridLineWidth: 0,
+          opposite: true,
+          title: {
+            text: null
+          },
+          labels: {
+            align: 'right',
+            x: -3,
+            y: 16,
+            format: '{value:.,0f}'
+          },
+          showFirstLabel: false
+        }],
+
+        legend: {
+          align: 'left',
+          verticalAlign: 'top',
+          y: 20,
+          floating: true,
+          borderWidth: 0
+        },
+
+        tooltip: {
+          shared: true,
+          crosshairs: true
+        },
+
+        plotOptions: {
+          series: {
+            cursor: 'pointer',
+            point: {
+              events: {
+                click: function (e) {
+                  hs.htmlExpand(null, {
+                    pageOrigin: {
+                      x: e.pageX || e.clientX,
+                      y: e.pageY || e.clientY
+                    },
+                    headingText: this.series.name,
+                    maincontentText: Highcharts.dateFormat('%A, %b %e, %Y', this.x) + ':<br/> ' +
+                    this.y + ' tickets',
+                    width: 200
+                  });
+                }
+              }
+            },
+            marker: {
+              lineWidth: 1
+            }
+          }
+        },
+
+        series: [{
+          name: 'Ticket Number',
+          lineWidth: 4,
+          marker: {
+            radius: 4
+          },
+          data: graphArr
+        }],
+        responsive: {
+          rules: [{
+            condition: {
+              maxWidth: 600
+            },
+            chartOptions: {
+              legend: {
+                verticalAlign: 'bottom',
+                y: 0,
+                floating: false
+              }
+            }
+          }]
+        }
+      });
+
+      let graph2L_Obj = {}
+      for (let i = 1, len = tmpData.length; i < len ; i++) {
+        graph2L_Obj[tmpData[i][1]] != null ? graph2L_Obj[tmpData[i][1]]++ : graph2L_Obj[tmpData[i][1]] = 1
+      }
+
+      let top10 = getTopN(graph2L_Obj, 10),
+      sum = 0
+      top10.map(e => sum += e.value)
+      let graph2L_Arr = top10.reduce((acumulate, ele) =>
+        [...acumulate, {name: ele.key, y: (ele.value / sum) * 100, drilldown: ele.key}]
+        ,[])
+
+      Highcharts.chart('graph2L', {
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: 'NRB Ticket Pie Chart View (Top 10)'
+        },
+
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: {point.y:.1f}%'
+            }
+          }
+        },
+
+        tooltip: {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
+        series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          data: graph2L_Arr
+        }]
+
+      });
+
+      console.log(top10.reduce((acc, ele) => [...acc, ele.key], []))
+
+
+      Highcharts.chart('graph2R', {
+        chart: {
+          type: 'bar'
+        },
+        xAxis: {
+          categories: top10.reduce((acc, ele) => [...acc, ele.key], []),
+          title: {
+            text: null
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            align: 'high'
+          },
+          labels: {
+            overflow: 'justify'
+          }
+        },
+        tooltip: {
+          valueSuffix: ' millions'
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'top',
+          x: -40,
+          y: 80,
+          floating: true,
+          borderWidth: 1,
+          backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+          shadow: true
+        },
+        credits: {
+          enabled: false
+        },
+        series: [{
+          data: top10.reduce((acc, ele) => [...acc, ele.value], [])
+        }]
+      });
+
+
+      let graph3L_Obj = {}
+      for (let i = 1, len = tmpData.length; i < len ; i++) {
+        graph3L_Obj[tmpData[i][3]] != null ? graph3L_Obj[tmpData[i][3]]++ : graph3L_Obj[tmpData[i][3]] = 1
+      }
+
+
+
+      let top10_DM = getTopN(graph3L_Obj, 10),
+      sum_DM = 0
+      top10_DM.map(e => sum_DM += e.value)
+      let graph3L_Arr = top10_DM.reduce((acumulate, ele) =>
+        [...acumulate, {name: ele.key, y: (ele.value / sum_DM) * 100, drilldown: ele.key}]
+        ,[])
+
+      Highcharts.chart('graph3L', {
+        chart: {
+          type: 'pie'
+        },
+        title: {
+          text: 'NRB Ticket Pie Chart View (Top 10)'
+        },
+
+        plotOptions: {
+          series: {
+            dataLabels: {
+              enabled: true,
+              format: '{point.name}: {point.y:.1f}%'
+            }
+          }
+        },
+
+        tooltip: {
+          headerFormat: '<span style="font-size:11px">{series.name}</span><br>',
+          pointFormat: '<span style="color:{point.color}">{point.name}</span>: <b>{point.y:.2f}%</b> of total<br/>'
+        },
+        series: [{
+          name: 'Brands',
+          colorByPoint: true,
+          data: graph3L_Arr
+        }]
+
+      });
+
+      console.log(top10_DM.reduce((acc, ele) => [...acc, ele.key], []))
+
+
+      Highcharts.chart('graph3R', {
+        chart: {
+          type: 'bar'
+        },
+
+        xAxis: {
+          categories: top10_DM.reduce((acc, ele) => [...acc, ele.key], []),
+          title: {
+            text: null
+          }
+        },
+        yAxis: {
+          min: 0,
+          title: {
+            align: 'high'
+          },
+          labels: {
+            overflow: 'justify'
+          }
+        },
+        tooltip: {
+          valueSuffix: ' millions'
+        },
+        plotOptions: {
+          bar: {
+            dataLabels: {
+              enabled: true
+            }
+          }
+        },
+        legend: {
+          layout: 'vertical',
+          align: 'right',
+          verticalAlign: 'top',
+          x: -40,
+          y: 80,
+          floating: true,
+          borderWidth: 1,
+          backgroundColor: ((Highcharts.theme && Highcharts.theme.legendBackgroundColor) || '#FFFFFF'),
+          shadow: true
+        },
+        credits: {
+          enabled: false
+        },
+        series: [{
+          data: top10_DM.reduce((acc, ele) => [...acc, ele.value], [])
+        }]
+      });
+    })
+  </script>
+
+
+</body>
+</html>

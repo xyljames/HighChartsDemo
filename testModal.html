@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document</title>
+  <script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <style>
+    input {
+      padding: 0;
+      margin: 0;
+    }
+    #myModal {
+      position: absolute;
+      border: 1px solid #ccc;
+      right: 20px;
+      top: 80px;
+      width: 340px;
+      height: 300px;
+      background-color: white;
+      z-index: 999;
+      display: none;
+    }
+    label {
+      display: block;
+      margin: 3px;
+    }
+    input {
+      border-radius: 3px;
+      width: 130px;
+    }
+    .left_part {
+      float: left;
+      margin-right: 10px;
+    }
+
+    .date {
+      margin-top: 8px;
+      display: inline-block;
+      margin-left: 14px;
+    }
+    .date div,
+    .date select {
+      padding: 2px;
+    }
+    #email_part {
+      clear: both;
+    }
+    #btnModal {
+      top: 10%;
+      left: 10%;
+      position: relative;
+    }
+  </style>
+
+</head>
+<body>
+  <button id="btnModal" class="btn btn-primary">Send Email</button>
+  <div id="myModal" >
+  <form action="http://localhost:8080/send-email" method="post" name="modalForm" onsubmit="return validateForm()" target="_blank">
+      <div class="form-group">
+        <div class="col-sm-8">
+          <h5  style="color: red">NRB Tickets Predict Analytics</h5>
+          <label  for="subList">Subscription list</label>
+          <select class="form-control " name="subList" id="subList">
+            <option value="">Please Select</option>
+            <option value="Trend">NRB Tickets Trending View</option>
+            <option value="Type">Sort By Problem Type</option>
+            <option value="Model">Sort By Device Model</option>
+          </select>
+        </div>
+
+        <div id="email_part">
+          <div class="left_part col-sm-5">
+            <label for="name">Name</label>
+            <input  class="form-control" type="text" name="name" required="required" />
+            <label for="cc">CC</label>
+            <input  class="form-control" type="email" name="cc" />
+          </div>
+          <div class="right_part col-sm-5">
+            <label for="to" >To</label>
+            <input  class="form-control" type="email" name="to" required="required"/>
+            <label for="bcc">BCC</label>
+            <input  class="form-control" type="email" name="bcc" />
+          </div>
+        </div>
+
+      </div>
+
+      <div class="date">
+        <div class="col-sm-3">
+          <select class="form-control " id="month" name="month" >
+            <option >Month</option>
+            <option value="1">January</option>
+            <option value="2">February</option>
+            <option value="3">March</option>
+            <option value="4">April</option>
+            <option value="5">May</option>
+            <option value="6">June</option>
+            <option value="7">July</option>
+            <option value="8">August</option>
+            <option value="9">September</option>
+            <option value="10">October</option>
+            <option value="11">November</option>
+            <option value="12">December</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <select class="form-control col-sm-1" id="day" name="day" >
+            <option>Day</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>13</option>
+            <option>14</option>
+            <option>15</option>
+            <option>16</option>
+            <option>17</option>
+            <option>18</option>
+            <option>19</option>
+            <option>20</option>
+            <option>21</option>
+            <option>22</option>
+            <option>23</option>
+            <option>24</option>
+            <option>25</option>
+            <option>26</option>
+            <option>27</option>
+            <option>28</option>
+            <option>29</option>
+            <option>30</option>
+            <option>31</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <select class="form-control col-sm-1" id="hour" name="hour" >
+            <option>Hour</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>13</option>
+            <option>14</option>
+            <option>15</option>
+            <option>16</option>
+            <option>17</option>
+            <option>18</option>
+            <option>19</option>
+            <option>20</option>
+            <option>21</option>
+            <option>22</option>
+            <option>23</option>
+            <option>24</option>
+          </select>
+        </div>
+        <div class="col-sm-3">
+          <select class="form-control col-sm-1" id="min" name="min" >
+            <option>Min</option>
+            <option>1</option>
+            <option>2</option>
+            <option>3</option>
+            <option>4</option>
+            <option>5</option>
+            <option>6</option>
+            <option>7</option>
+            <option>8</option>
+            <option>9</option>
+            <option>10</option>
+            <option>11</option>
+            <option>12</option>
+            <option>13</option>
+            <option>14</option>
+            <option>15</option>
+            <option>16</option>
+            <option>17</option>
+            <option>18</option>
+            <option>19</option>
+            <option>20</option>
+            <option>21</option>
+            <option>22</option>
+            <option>23</option>
+            <option>24</option>
+            <option>25</option>
+            <option>26</option>
+            <option>27</option>
+            <option>28</option>
+            <option>29</option>
+            <option>30</option>
+            <option>31</option>
+            <option>32</option>
+            <option>33</option>
+            <option>34</option>
+            <option>35</option>
+            <option>36</option>
+            <option>37</option>
+            <option>38</option>
+            <option>39</option>
+            <option>40</option>
+            <option>41</option>
+            <option>42</option>
+            <option>43</option>
+            <option>44</option>
+            <option>45</option>
+            <option>46</option>
+            <option>47</option>
+            <option>48</option>
+            <option>49</option>
+            <option>50</option>
+            <option>51</option>
+            <option>52</option>
+            <option>53</option>
+            <option>54</option>
+            <option>55</option>
+            <option>56</option>
+            <option>57</option>
+            <option>58</option>
+            <option>59</option>
+            <option>60</option>
+          </select>
+        </div>
+      </div>
+      <div class="col-sm-10">
+        <button type="submit" class="btn btn-danger pull-right">Subscribe</button>
+      </div>
+    </form>
+  </div>
+  <script>
+    let btnModal = document.getElementById('btnModal')
+
+    btnModal.addEventListener('click', function () {
+      let myModal = document.getElementById('myModal')
+      myModal.style.display = myModal.style.display == "none" ? "block" : "none"
+    })
+    function validateForm() {
+      let month = document.forms["modalForm"]["month"].value
+      let day = document.forms["modalForm"]["day"].value
+      if (month == 2 && day > 28) {
+        alert("February has no more than 28 days.")
+        return false
+      }
+      else if ((month == 4 ||
+                month == 6 ||
+                month == 9 ||
+                month == 11) && day == 31) {
+        alert("The month you chosen does not have the 31th day. ")
+        return false
+      }
+      let myModal = document.getElementById('myModal')
+      myModal.style.display = "none"
+      return true
+    }
+  </script>
+</body>
+</html>

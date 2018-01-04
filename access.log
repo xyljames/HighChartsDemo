@@ -1,0 +1,8 @@
+::1 - - [Thu, 04 Jan 2018 21:13:40 GMT] "GET / HTTP/1.1" 200 9558 "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:13:40 GMT] "GET /testdata.csv HTTP/1.1" 404 25 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:13:40 GMT] "GET /testModal.html HTTP/1.1" 200 8607 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:13:40 GMT] "GET /favicon.ico HTTP/1.1" 404 24 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:20:24 GMT] "GET / HTTP/1.1" 304 - "-" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:20:25 GMT] "GET /testModal.html HTTP/1.1" 304 - "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:20:25 GMT] "GET /testdata.csv HTTP/1.1" 200 6110226 "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
+::1 - - [Thu, 04 Jan 2018 21:20:34 GMT] "GET /testModal.html HTTP/1.1" 304 - "http://localhost:8080/" "Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.84 Safari/537.36"
